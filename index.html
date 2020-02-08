@@ -1,0 +1,110 @@
+<html>
+<head>
+    <script src="jquery-3.4.1.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <link href="bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .wating {
+            font-size: 15px;
+        }
+
+        .winner {
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control form-control-sm" id="entryName" placeholder="Entry Name">
+                <br />
+                <button type="button" class="btn btn-primary btn-sm" id="addToRaffle">Add to Raffle Entry</button>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h5>Entry List</h5>
+                            </div>
+                            <div class="co-md-3">
+                                <button type="button" class="btn btn-primary btn-sm float-right" id="startRaffle">Start the Raffle</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group" id="raffleList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalWinner">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Congratulations</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1 class="text-center" id="raffleWinner"></h1>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var raffleList = ["Carlos","Juan","Pablo"];
+
+    raffleList.forEach(function (data) {
+        $("#raffleList").append('<li class="list-group-item" value="'+ data +'">' + data + '</li>')
+    });
+
+    $("#addToRaffle").click(function () {
+        if (raffleList.includes($("#entryName").val())) {
+            alert($("#entryName").val() + " already exists in the Raffle List!")
+        }
+        else if ($("#entryName").val().length != 0) {
+            raffleList.push($("#entryName").val());
+            $("#raffleList").append('<li class="list-group-item">' + $("#entryName").val() + '</li>')
+            $("#entryName").val('')
+        }
+        else {
+            alert("invalid name!")
+        }
+    });
+
+
+    $("#startRaffle").click(function () {
+
+        if (raffleList.length == 0) {
+            alert("No Entry Names are registered!");
+        }
+        else {
+            const randomEntry = raffleList[Math.floor(Math.random() * raffleList.length)];
+            $("#raffleWinner").html(randomEntry);
+            $('#modalWinner').modal('show');
+
+            raffleList = $.grep(raffleList, function (value) {
+                return value != randomEntry;
+            });
+
+            $('li:contains("' + randomEntry + '")').remove();
+        }
+
+       
+
+    });
+
+    </script>
+</body>
+
+
+</html>
